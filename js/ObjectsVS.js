@@ -75,7 +75,7 @@ class Person {
 
     //método toString
     toString() {
-        return 'Nombre: ' + this._name + ', Apellido1: ' + this._lastname1 + ', Apellido2: ' + this._lastname2 +
+        return 'Person - Nombre: ' + this._name + ', Apellido1: ' + this._lastname1 + ', Apellido2: ' + this._lastname2 +
             ', Fecha de nacimiento: ' + this._born + ', Imagen: ' + this._picture;
     }
 }
@@ -113,7 +113,7 @@ class Category {
 
     //toString
 
-    toString() { return 'Nombre: ' + this._name + ', descripción: ' + this._description; }
+    toString() { return 'Categoría - Nombre: ' + this._name + ', descripción: ' + this._description; }
 }
 
 class Resource {
@@ -185,7 +185,7 @@ class Resource {
     }
 
     toString() {
-        return 'Duración: ' + this._duration + ', link: ' + this._link + ', Audios: ' +
+        return 'Recurso - Duración: ' + this._duration + ', link: ' + this._link + ', Audios: ' +
             this._audios + ', Subtítulos: ' + this._subtitles;
     }
 
@@ -300,7 +300,7 @@ class Movie extends Production {
     }
 
     toString() {
-        return super.toString() + ' , Recurso: ' + this._resource + ' , Localizaciones: ' + this._locations;
+        return 'Película - ' + super.toString() + ' , Recurso: ' + this._resource + ' , Localizaciones: ' + this._locations;
     }
 
 }
@@ -331,7 +331,7 @@ class Serie extends Production {
     }
 
     toString() {
-        return super.toString() + ' , Temporadas: ' + this._seasons;
+        return 'Serie - ' + super.toString() + ' , Temporadas: ' + this._seasons;
     }
 
 }
