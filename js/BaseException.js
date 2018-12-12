@@ -22,7 +22,7 @@ ParameterValidationException.prototype.constructor = ParameterValidationExceptio
 //Excepción de valor inválido
 function InvalidValueException(param, value) {
 	this.name = "InvalidValueException";
-	this.message = "Error: The paramenter " + param + " has an invalid value. (" + param + ": " + value + ")";
+	this.message = "Error: The parameter " + param + " has an invalid value. (" + param + ": " + value + ")";
 }
 InvalidValueException.prototype = new ParameterValidationException(); //Heredamos de ParameterValidationException
 InvalidValueException.prototype.constructor = InvalidValueException;

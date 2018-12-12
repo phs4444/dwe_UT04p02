@@ -1,3 +1,4 @@
+## versión 1.0
 ## versión 0.6
   -- Mejorar test
 ## versión 0.5

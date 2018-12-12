@@ -9,7 +9,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
         //Declaración de la función constructora de la instancia VStreaming
         function VStreaming() {
             //La función se invoca con el operador new
-            if (!(this instanceof Vstreaming))
+            if (!(this instanceof VStreaming))
                 throw new InvalidAccessConstructorException();
 
             //Definición de atributos privados del objeto
@@ -64,7 +64,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 function compareElements(element) {
                     return (element.username === user.username);
                 }
-                return _user.findIndex(compareElements);
+                return _users.findIndex(compareElements);
             }
 
             // function getUserEMailPosition(user) => posición de user o -1
@@ -73,7 +73,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 function compareElements(element) {
                     return (element.email === user.email)
                 }
-                return _user.findIndex(compareElements);
+                return _users.findIndex(compareElements);
             }
 
             // addUser => Number con el número de elementos
@@ -119,7 +119,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // function getProductionPosition(production) => posición de production o -1
             function getProductionPosition(production) {
-                if (!(user instanceof Production)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return (element.title === production.title)
                 }
@@ -180,8 +180,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 if (category === null) throw new NullElementException('category');
                 var categoryPosition = getCategoryPosition(category);
-                if (categoryPosition !== -1) throw new NotExistsElementException('category');
-                return _category.push(catetory);
+                if (categoryPosition !== -1) throw new ElementAlreadyExistException('category');
+                return _categories.push(category);
             }
 
             // removeCategory => Number con el número de elementos
@@ -230,7 +230,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
                 if (actor === null) throw new NullElementException('actor');
                 var actorPosition = getActorPosition(actor);
-                if (actorPosition !== -1) throw new NotExistsElementException('actor');
+                if (actorPosition !== -1) throw new ElementAlreadyExistException('actor');
                 return _actors.push(actor);
             }
 
@@ -315,8 +315,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
-                var categoryPosition = this.getCategoryPosition(category);
-                var productionPosition = this.getProductionPosition(production);
+                var categoryPosition = getCategoryPosition(category);
+                var productionPosition = getProductionPosition(production);
                 //si la categoría no existe la añado y ya se que su posición será la última del array (no uso addCategory porque redunda)
                 if (categoryPosition === -1) categoryPosition = _categories.push(category) - 1;
                 //igual con la producción. actualizamos la nueva posición aunque no es necesario
@@ -333,6 +333,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //si lo he encontrado => lanzo excepción
                 if (encontrado) throw new ElementAlreadyExistException('production');
                 //si no => la añado y devuelvo el nuevo número de elementos
+               
                 return _categories[categoryPosition].productions.push(production);
             }
 
@@ -344,8 +345,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
-                var categoryPosition = this.getCategoryPosition(category);
-                var productionPosition = this.getProductionPosition(production);
+                var categoryPosition = getCategoryPosition(category);
+                var productionPosition = getProductionPosition(production);
                 //si obtengo algún -1 excepción
                 if (categoryPosition === -1) throw new NotExistsElementException('category');
                 if (productionPosition === -1) throw new NotExistsElementException('production');
@@ -363,7 +364,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (category === null) throw new NullElementException('category');
                 if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
-                var categoryPosition = this.getCategoryPosition(category);
+                var categoryPosition = getCategoryPosition(category);
                 //si obtengo algún -1 excepción
                 if (categoryPosition === -1) throw new NotExistsElementException('category');
                 var nextIndex = 0;
@@ -391,8 +392,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
                 if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
-                var directorPosition = this.getDirectorPosition(director);
-                var productionPosition = this.getProductionPosition(production);
+                var directorPosition = getDirectorPosition(director);
+                var productionPosition = getProductionPosition(production);
                 //si la director no existe lo añado y ya se que su posición será la última del array (no uso addDirector porque redunda)
                 if (directorPosition === -1) directorPosition = _directors.push(director) - 1;
                 //igual con la producción. actualizamos la nueva posición aunque no es necesario
@@ -420,8 +421,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
                 if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
-                var directorPosition = this.getDirectorPosition(director);
-                var productionPosition = this.getProductionPosition(production);
+                var directorPosition = getDirectorPosition(director);
+                var productionPosition = getProductionPosition(production);
                 //si obtengo algún -1 excepción
                 if (directorPosition === -1) throw new NotExistsElementException('director');
                 if (productionPosition === -1) throw new NotExistsElementException('production');
@@ -439,7 +440,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (director === null) throw new NullElementException('director');
                 if (!(director instanceof Director)) throw new InvalidAccessConstructorException();
-                var directorPosition = this.getDirectorPosition(director);
+                var directorPosition = getDirectorPosition(director);
                 //si obtengo algún -1 excepción
                 if (directorPosition === -1) throw new NotExistsElementException('director');
                 var nextIndex = 0;
@@ -467,8 +468,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
                 if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
-                var actorPosition = this.getActorPosition(actor);
-                var productionPosition = this.getProductionPosition(production);
+                var actorPosition = getActorPosition(actor);
+                var productionPosition = getProductionPosition(production);
                 //si la actor no existe lo añado y ya se que su posición será la última del array (no uso addActor porque redunda)
                 if (actorPosition === -1) actorPosition = _actors.push(actor) - 1;
                 //igual con la producción. actualizamos la nueva posición aunque no es necesario
@@ -496,8 +497,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
                 if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
-                var actorPosition = this.getActorPosition(actor);
-                var productionPosition = this.getProductionPosition(production);
+                var actorPosition = getActorPosition(actor);
+                var productionPosition = getProductionPosition(production);
                 //si obtengo algún -1 excepción
                 if (actorPosition === -1) throw new NotExistsElementException('actor');
                 if (productionPosition === -1) throw new NotExistsElementException('production');
@@ -515,7 +516,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (actor === null) throw new NullElementException('actor');
                 if (!(actor instanceof Actor)) throw new InvalidAccessConstructorException();
-                var actorPosition = this.getActorPosition(actor);
+                var actorPosition = getActorPosition(actor);
                 //si obtengo algún -1 excepción
                 if (actorPosition === -1) throw new NotExistsElementException('actor');
                 var nextIndex = 0;

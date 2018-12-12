@@ -6,21 +6,18 @@ const namePattern = /^[a-z,A-Z,á,é,í,ó,ú,â,ê,ô,ã,õ,ç,Á,É,Í,Ó,Ú,�
 const urlPattern = /^https?:\/\/(www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}(\:(\d){2,4})?(\/[a-zA-Z0-9_.$%._\+~#]+)*(\?(\w+=.*)(\&(\w+=.+))*)?$/;
 const usernamePattern = /^[a-zA-Z][a-zA-Z0-9_\-]*(\.[a-zA-Z0-9_\-]*)*[a-zA-Z0-9]$/;
 const emailPattern = /^[a-zA-Z][a-zA-Z0-9_\-]*(\.[a-zA-Z0-9_\-]*)*[a-zA-Z0-9]\@[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[ -/:-@\[-`{-~]).{6,10}$/;
 class Person {
-    constructor(name, lastname1, lastname2, born, picture) {
+    constructor(name, lastname1, lastname2 = null, born, picture = null) {
         //comprobamos el uso del operador new
         if (!(this instanceof Person)) throw new InvalidAccessConstructorException();
-
-        name = name.trim();
-        lastname1 = lastname1.trim();
-
 
         //comprobamos que los parámetros son datos válidos. 
         //Usamos namePattern para comprobar nombre y apellidos y urlPattern para picture
         name = typeof name !== 'undefined' ? name : '';
+        if (name === '') throw new EmptyValueException('name');
         if (!namePattern.test(name)) throw new InvalidValueException('name', name);
         lastname1 = typeof lastname1 !== 'undefined' ? lastname1 : '';
+        if (lastname1 === '') throw new EmptyValueException('lastName1');
         if (!namePattern.test(lastname1)) throw new InvalidValueException('lastname1', lastname1);
         lastname2 = typeof lastname2 !== 'undefined' ? lastname2 : '';
         if ((lastname2 !== '') && !namePattern.test(lastname2)) throw new InvalidValueException('lastname2', lastname2);
@@ -28,7 +25,7 @@ class Person {
         born = typeof born !== 'undefined' ? born : '';
         if (born === '') throw new EmptyValueException('born');
         picture = typeof picture !== 'undefined' ? picture : '';
-        if ((picture !== '') && !urlPattern.test(picture)) throw new InvalidValueException('picture', picture);
+        if (!urlPattern.test(picture) && (picture !== null)) throw new InvalidValueException('picture', picture);
 
         //Si los datos son validos, los usamos para inicializar los valores de "this"
         this._name = name;
@@ -66,10 +63,10 @@ class Person {
     }
 
     get picture() { return this._picture; }
-    set picture() {
+    set picture(value) {
         if (value === 'undefined') throw new EmptyValueException('picture');
         //al testearlo con el urlPattern no necesito mirar si es vacío
-        if (!urlPattern.test(value)) throw new InvalidValueException('picture', value);
+        if (!urlPattern.test(value) && (picture !== null)) throw new InvalidValueException('picture', value);
         this._picture = value;
     }
 
@@ -81,7 +78,7 @@ class Person {
 }
 
 class Category {
-    constructor(name, description) {
+    constructor(name, description = 'No hay descripción') {
 
         //comprobar uso del operador new
         if (!(this instanceof Category)) throw new InvalidAccessConstructorException();
@@ -117,7 +114,7 @@ class Category {
 }
 
 class Resource {
-    constructor(duration, link, audios, subtitles) {
+    constructor(duration, link, audios = null, subtitles = null) {
 
         //comprobar uso del operador new
         if (!(this instanceof Resource)) throw new InvalidAccessConstructorException();
@@ -125,28 +122,15 @@ class Resource {
         //comprobamos que los parámetros son datos válidos. 
         duration = typeof duration !== 'undefined' ? Number(duration).valueOf() : NaN;
         if (Number.isNaN(duration) || duration < 0) throw new InvalidValueException('duration', duration);
-        link = typeof link !== 'undefined' ? picture : '';
+        link = typeof link !== 'undefined' ? link : '';
         if (link === '') throw new EmptyValueException('link');
-        if ((link !== '') && !urlPattern.test(link)) throw new InvalidValueException('link', link);
-        audios = typeof audios !== 'undefined' ? audios : [];
-        if (Array.isArray(audios) &&
-            (audios.lenght == 0 || audios.every(function (i) { return typeof i === 'string' }))) {
-            this._audios = audios;
-        } else throw new InvalidValueException('audios', audios);
-        subtitles = typeof subtitles !== 'undefined' ? subtitles : [];
-        if (Array.isArray(subtitles) &&
-            (subtitles.lenght == 0 || subtitles.every(function (i) { return typeof i === 'string' }))) {
-            this._subtitles = subtitles;
-        } else throw new InvalidValueException('subtitles', subtitles);
-
-
-
-        subtitles = subtitles || [];
+        if (!urlPattern.test(link)) throw new InvalidValueException('link', link);
 
         //Si los datos son validos, los usamos para inicializar los valores de "this"
         this._duration = duration;
         this._link = link;
-        //audios y subtitles inicializados al comprobar los datos
+        this._audios = audios || [];
+        this._subtitles = subtitles || [];
     }
 
     //getters & setters
@@ -167,21 +151,16 @@ class Resource {
 
     get audios() { return this._audios };
     set audios(value) {
-        if (value === 'undefined') throw new EmptyValueException('audios');
-        if (Array.isArray(value) &&
-            (value.lenght == 0 || value.every(function (i) { return typeof i === 'string' }))) {
-            this._audios = value;
-        } else throw new InvalidValueException('audios', value);
+        value = typeof value !== 'undefined' ? value : '';
+        if (value === '') throw new EmptyValueException('audios');
+        this._audios = value;
     }
 
     get subtitles() { return this._subtitles };
     set subtitles(value) {
-        if (value === 'undefined') throw new EmptyValueException('subtitles');
-        if (Array.isArray(value) &&
-            (value.lenght == 0 || value.every(function (i) { return typeof i === 'string' }))) {
-            this._subtitles = value;
-        } else throw new InvalidValueException('subtitles', value);
-
+        value = typeof value !== 'undefined' ? value : '';
+        if (value === '') throw new EmptyValueException('subtitles');
+        this._subtitles = value;
     }
 
     toString() {
@@ -193,7 +172,7 @@ class Resource {
 }
 
 class Production {
-    constructor(title, nationality, publication, synopsis, image) {
+    constructor(title, nationality = null, publication, synopsis = null, image = null) {
         //comprobar uso del operador new
         if (!(this instanceof Production)) throw new InvalidAccessConstructorException();
         //comprobamos para que sea abstracta
@@ -208,7 +187,7 @@ class Production {
         if (publication === '') throw new EmptyValueException('publication');
         synopsis = synopsis || '';
         image = typeof image !== 'undefined' ? image : '';
-        if ((image !== '') && !urlPattern.test(image)) throw new InvalidValueException('image', image);
+        if (!urlPattern.test(image) && (image !== null)) throw new InvalidValueException('image', image);
 
         //Si los datos son validos, los usamos para inicializar los valores de "this"
         this._title = title;
@@ -248,7 +227,7 @@ class Production {
     get image() { return this._image };
     set image(value) {
         if (value === 'undefined') throw new EmptyValueException('image');
-        if (!urlPattern.test(value)) throw new InvalidValueException('image', value);
+        if (!urlPattern.test(value) && (value !== null)) throw new InvalidValueException('image', value);
         this._image = value;
 
     }
@@ -261,22 +240,19 @@ class Production {
 }
 
 class Movie extends Production {
-    constructor(title, nationality, publication, synopsis, image, resource, locations) {
+    constructor(title, nationality, publication, synopsis, image, resource = null, locations = null) {
         //comprobar uso del operador new
-        if (!(this instanceof Movie)) throw new InvalidAccessConstructorException();
         super(title, nationality, publication, synopsis, image);
+        if (!(this instanceof Movie)) throw new InvalidAccessConstructorException();
 
         //comprobamos validez de los parámetros exclusivos de Movie
         resource = resource || '';
         if ((resource !== '') && (!resource instanceof Resource)) throw new InvalidValueException('resource', resource);
         locations = typeof locations !== 'undefined' ? locations : [];
-        if (Array.isArray(locations) &&
-            (locations.lenght == 0 || locations.every(function (i) { return i instanceof Coordinate }))) {
-            this._locations = locations;
-        } else throw new InvalidValueException('locations', locations);
 
         //asignamos valores al "this"
         this._resource = resource;
+        this._locations = locations;
     }
 
     //setters & getters
@@ -287,16 +263,12 @@ class Movie extends Production {
         if (value === 'undefined') throw new EmptyValueException('resource');
         if (!value instanceof Resource) throw new InvalidValueException('resource', value);
         this._resource = value;
-
     }
 
     get locations() { return this._locations };
     set locations(value) {
         if (value === 'undefined') throw new EmptyValueException('locations');
-        if (Array.isArray(value) &&
-            (value.lenght == 0 || value.every(function (i) { return i instanceof Coordinate }))) {
-            this._locations = value;
-        } else throw new InvalidValueException('locations', value);
+        this._locations = value;
     }
 
     toString() {
@@ -306,28 +278,21 @@ class Movie extends Production {
 }
 
 class Serie extends Production {
-    constructor(title, nationality, publication, synopsis, image, seasons) {
+    constructor(title, nationality, publication, synopsis, image, seasons = null) {
         //comprobar uso del operador new
-        if (!(this instanceof Serie)) throw new InvalidAccessConstructorException();
         super(title, nationality, publication, synopsis, image);
+        if (!(this instanceof Serie)) throw new InvalidAccessConstructorException();
 
-        //comprobamos validez de los parámetros exclusivos de Movie
-        seasons = typeof seasons !== 'undefined' ? seasons : [];
-        if (Array.isArray(seasons) &&
-            (seasons.lenght == 0 || seasons.every(function (i) { return i instanceof Season }))) {
-            this._seasons = seasons;
-        } else throw new InvalidValueException('seasons', seasons);
-
+        //asignamos valores
+        this._seasons = seasons || [];
     }
 
     //setters & getters
     get seasons() { return this._seasons };
     set seasons(value) {
-        if (value === 'undefined') throw new EmptyValueException('seasons');
-        if (Array.isArray(value) &&
-            (value.lenght == 0 || value.every(function (i) { return i instanceof Season }))) {
-            this._seasons = value;
-        } else throw new InvalidValueException('seasons', value);
+        value = typeof Season !== 'undefined' ? value : '';
+        if (value === '') throw new EmptyValueException('seasons');
+        this._seasons = value;
     }
 
     toString() {
@@ -336,49 +301,33 @@ class Serie extends Production {
 
 }
 
-class Season{
-    constructor(title, episodes) {
+class Season {
+    constructor(title, episodes = null) {
         //comprobar uso del operador new
         if (!(this instanceof Season)) throw new InvalidAccessConstructorException();
-     
+
         //comprobamos que los parámetros son datos válidos. 
         title = typeof title !== 'undefined' ? title : '';
         if (title === '') throw new EmptyValueException('title');
-        for (let i=0; i < episodes.lenght; i++){
-            episodes[i].title = episodes[i].title || '';
-            episodes[i].episode = episodes[i].episode || '';
-            if ((episodes[i].episode !== '') && (!episodes[i].episode instanceof Resource)) 
-            throw new InvalidValueException('episodes', episodes[i].episode);
-            for (let j = 0; j < episodes[i].scenarios.lenght; j++){
-                if (!(episodes[i].scenarios[j] instanceof Coordinate))
-                throw new InvalidValueException('episodes');
-            }
 
-        }
         //asignamos valores a "this"
         this._title = title;
-        this._episodes = episodes;
+        this._episodes = episodes || [];
     }
 
     //setters & getters
-    get title() {return this._title};
+    get title() { return this._title };
     set title(value) {
-        if (value ==='undefined' || value === null) throw new EmptyValueException('title');
+        value = typeof value !== 'undefined' ? value : '';
+        if (value === '' || value === null) throw new EmptyValueException('title');
         this._title = value;
     }
 
-    get episodes() { return this._episodes};
+    get episodes() { return this._episodes };
     set episodes(value) {
-        for (let i=0; i<value.lenght; i++){
-            if (value[i].title === 'undefined' || value[i].episode === 'undefined' || 
-            value[i].scenarios === 'undefined') throw new EmptyValueException('episodes');
-            for (let j = 0; j < value[i].lenght; j++) {
-                if (value[i].scenarios[j] === 'undefined') throw new EmptyValueException('scenarios');
-                }
-                
-        }
+        value = typeof value !== 'undefined' ? value : '';
+        if (value === '') throw new EmptyValueException('episodes');
         this._episodes = value;
-        
     }
 
     toString() {
@@ -386,48 +335,47 @@ class Season{
     }
 }
 
-class User{
+class User {
     constructor(username, email, password) {
-         //comprobar uso del operador new
-         if (!(this instanceof User)) throw new InvalidAccessConstructorException();
-    
-
-    //comprobamos validez de datos entrada
-    username = typeof username !== 'undefined' ? username : '';
-    if (!usernamePattern.test(username)) throw new InvalidValueException('username', username);
-    email = typeof email !== 'undefined' ? email : '';
-    if (!emailPattern.test(email)) throw new InvalidValueException('email', email);
-    password = typeof password !== 'undefined' ? password : '';
-    if (!passwordPattern.test(password)) throw new InvalidValueException('password', password);
+        //comprobar uso del operador new
+        if (!(this instanceof User)) throw new InvalidAccessConstructorException();
 
 
-    //asignamos valores a "this"
-    this._username = username;
-    this._email = email;
-    this._password = password;
-}
+        //comprobamos validez de datos entrada
+        username = typeof username !== 'undefined' ? username : '';
+        if (!usernamePattern.test(username)) throw new InvalidValueException('username', username);
+        email = typeof email !== 'undefined' ? email : '';
+        if (!emailPattern.test(email)) throw new InvalidValueException('email', email);
+        password = typeof password !== 'undefined' ? password : '';
+        if (password === '') throw new EmptyValueException('password');
 
-//setter & getters
-get username() {return this._username};
-set username(value) {
-    if (value === 'undefined' || value === null) throw new EmptyValueException('username');
-    if (!usernamePattern.test(value)) throw new InvalidValueException('username', value);
-    this._username = value;
-}
-get email() {return this._email};
-set email(value) {
-    if (value === 'undefined' || value === null) throw new EmptyValueException('email');
-    if (!emailPattern.test(value)) throw new InvalidValueException('email', value);
-    this._email = value;
-}
-set password(value) {
-    if (value === 'undefined' || value ===null) throw new EmptyValueException('password');
-    if (!passwordPattern.test(value)) throw new InvalidValueException('password', value);
-    this._password = value;
-}
-toString() {
-    return 'Usuario - Username: ' + this._username + ', email: ' + this._email + ', password: *****';
-}
+        //asignamos valores a "this"
+        this._username = username;
+        this._email = email;
+        this._password = password;
+    }
+
+    //setter & getters
+    get username() { return this._username };
+    set username(value) {
+        if (value === 'undefined' || value === null) throw new EmptyValueException('username');
+        if (!usernamePattern.test(value)) throw new InvalidValueException('username', value);
+        this._username = value;
+    }
+    get email() { return this._email };
+    set email(value) {
+        if (value === 'undefined' || value === null) throw new EmptyValueException('email');
+        if (!emailPattern.test(value)) throw new InvalidValueException('email', value);
+        this._email = value;
+    }
+    set password(value) {
+        if (value === 'undefined' || value === null) throw new EmptyValueException('password');
+        if (value === '') throw new EmptyValueException('password');
+        this._password = value;
+    }
+    toString() {
+        return 'Usuario - Username: ' + this._username + ', email: ' + this._email + ', password: *****';
+    }
 
 }
 
@@ -439,32 +387,32 @@ class Coordinate {
         //comprobación parámetros constructor
         latitude = typeof latitude !== 'undefined' ? Number(latitude).valueOf() : NaN;
         if (Number.isNaN(latitude) || latitude < -90 || latitude > 90)
-        throw new InvalidValueException('latitude', latitude);
+            throw new InvalidValueException('latitude', latitude);
         longitude = typeof longitude !== 'undefined' ? Number(longitude).valueOf() : NaN;
         if (Number.isNaN(longitude) || longitude < -180 || longitude > 180)
-        throw new InvalidValueException('longitude', longitude);
+            throw new InvalidValueException('longitude', longitude);
 
         //asignar valores a "this"
         this._latitude = latitude;
         this._longitude = longitude;
     }
-        //getters & setters
-        get latitude() {return this._latitude};
-        set latitude(value) {
-            if (value === 'undefined' || value === null) throw new EmptyValueException('latitude');
-            if (Number.isNaN(value) || Number.isNaN(value) < -90 || Number.isNaN(value) > 90)
+    //getters & setters
+    get latitude() { return this._latitude };
+    set latitude(value) {
+        if (value === 'undefined' || value === null) throw new EmptyValueException('latitude');
+        if (Number.isNaN(value) || Number.isNaN(value) < -90 || Number.isNaN(value) > 90)
             throw new InvalidValueException('latitude', value);
-            this._latitude = value;
-        }
-        get longitude() {return this._longitude};
-        set longitude(value) {
-            if (value === 'undefined' || value === null) throw new EmptyValueException('longitude');
-            if (Number.isNaN(value) || Number.isNaN(value) < -180 || Number.isNaN(value) > 180)
+        this._latitude = value;
+    }
+    get longitude() { return this._longitude };
+    set longitude(value) {
+        if (value === 'undefined' || value === null) throw new EmptyValueException('longitude');
+        if (Number.isNaN(value) || Number.isNaN(value) < -180 || Number.isNaN(value) > 180)
             throw new InvalidValueException('longitude', value);
-            this._longitude = value;
-        }
+        this._longitude = value;
+    }
 
-        toString() {
-            return 'Coordenadas - Latitud: ' + this._latitude + ', Longitud: ' + this._longitude;
-        }
+    toString() {
+        return 'Coordenadas - Latitud: ' + this._latitude + ', Longitud: ' + this._longitude;
+    }
 }
