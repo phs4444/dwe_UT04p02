@@ -1,5 +1,7 @@
+## versión 0.6
+  -- Mejorar test
 ## versión 0.5
-  -- VStreaming.js a falta de getCast.js
+  -- Mejoras y corrección de errores
 ## versión 0.2
   -- añadido BaseException.js
 ## versión 0.1

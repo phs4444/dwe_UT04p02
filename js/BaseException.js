@@ -19,14 +19,6 @@ function ParameterValidationException() {
 ParameterValidationException.prototype = new BaseException(); //Heredamos de BaseException
 ParameterValidationException.prototype.constructor = ParameterValidationException;
 
-//Excepción personalizada para indicar valores vacios.
-function EmptyValueException(param) {
-	this.name = "EmptyValueException";
-	this.message = "Error: The parameter " + param + " can't be empty.";
-}
-EmptyValueException.prototype = new ParameterValidationException(); //Heredamos de ParameterValidationException
-EmptyValueException.prototype.constructor = EmptyValueException;
-
 //Excepción de valor inválido
 function InvalidValueException(param, value) {
 	this.name = "InvalidValueException";
@@ -34,6 +26,14 @@ function InvalidValueException(param, value) {
 }
 InvalidValueException.prototype = new ParameterValidationException(); //Heredamos de ParameterValidationException
 InvalidValueException.prototype.constructor = InvalidValueException;
+
+//Excepción personalizada para indicar valores vacios.
+function EmptyValueException(param) {
+	this.name = "EmptyValueException";
+	this.message = "Error: The parameter " + param + " can't be empty.";
+}
+EmptyValueException.prototype = new ParameterValidationException(); //Heredamos de ParameterValidationException
+EmptyValueException.prototype.constructor = EmptyValueException;
 
 //Excepción acceso inválido a constructor
 function InvalidAccessConstructorException() {
@@ -59,3 +59,26 @@ function AbstractClassException(classValue) {
 AbstractClassException.prototype = new BaseException(); 
 AbstractClassException.prototype.constructor = AbstractClassException;
 
+//Excepción el objeto es nulo
+function NullElementException(param) {
+	this.name = "NullElementException";
+	this.message = "Object " + param + " is null. Unexpected.";
+}
+NullElementException.prototype = new BaseException(); 
+NullElementException.prototype.constructor = NullElementException;
+
+//Excepción el objeto ya existe en la lista
+function ElementAlreadyExistException(param) {
+	this.name = "ElementAlreadyExistException";
+	this.message = "Object " + param + " is already in the list.";
+}
+ElementAlreadyExistException.prototype = new BaseException(); 
+ElementAlreadyExistException.prototype.constructor = ElementAlreadyExistException;
+
+//Excepción el objeto no existe en la lista
+function NotExistsElementException(param) {
+	this.name = "NotExistsElementException";
+	this.message = "Object " + param + " doesn't exist in the list.";
+}
+NotExistsElementException.prototype = new BaseException(); 
+NotExistsElementException.prototype.constructor = NotExistsElementException;

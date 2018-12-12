@@ -36,9 +36,6 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
             });
 
 
-
-
-
             /****  USERS: 
                          *      Iterador de usuario
                          *      function getUserPosition(user) => posición de user o -1 según username
@@ -61,10 +58,9 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 }
             });
 
-
             // function getUserPosition(user) => posición de user o -1
             function getUserPosition(user) {
-                if (!(user instanceof User)) throw new NotInstanceOfException(user, 'User');
+                if (!(user instanceof User)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return (element.username === user.username);
                 }
@@ -73,7 +69,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // function getUserEMailPosition(user) => posición de user o -1
             function getUserEMailPosition(user) {
-                if (!(user instanceof User)) throw new UserVStremingException();
+                if (!(user instanceof User)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return (element.email === user.email)
                 }
@@ -82,17 +78,17 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // addUser => Number con el número de elementos
             this.addUser = function (user) {
-                if (!(user instanceof User)) throw new InvalidElementException('user');
+                if (!(user instanceof User)) throw new InvalidAccessConstructorException();
                 if (user === null) throw new NullElementException('user');
                 var UserPositionByUserName = getUserPosition(user);
                 var UserPositionByEMail = getUserEMailPosition(user);
-                if ((UserPositionByUserName !== -1) || (UserPositionByEMail !== -1)) throw new NotUniqueElementException('user');
+                if ((UserPositionByUserName !== -1) || (UserPositionByEMail !== -1)) throw new ElementAlreadyExistException('user');
                 return _users.push(user);
             }
 
             // removeUser => Number con el número de elementos
             this.removeUser = function (user) {
-                if (!(user instanceof User)) throw new InvalidElementException('user');
+                if (!(user instanceof User)) throw new InvalidAccessConstructorException();
                 if (user === null) throw new NullElementException('user');
                 var UserPosition = getUserPosition(user);
                 if (UserPosition === -1) throw new NotExistsElementException('user');
@@ -123,7 +119,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // function getProductionPosition(production) => posición de production o -1
             function getProductionPosition(production) {
-                if (!(user instanceof Production)) throw new NotInstanceOfException(production, 'Production');
+                if (!(user instanceof Production)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return (element.title === production.title)
                 }
@@ -132,16 +128,16 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // addProduction => Number con el número de elementos
             this.addProduction = function (production) {
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 if (production === null) throw new NullElementException('production');
                 var productionPosition = getProductionPosition(production);
-                if (productionPosition !== -1) throw new NotUniqueElementException('production');
+                if (productionPosition !== -1) throw new ElementAlreadyExistException('production');
                 return _productions.push(production);
             }
 
             // removeProduction => Number con el número de elementos
             this.removeProduction = function (production) {
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 if (production === null) throw new NullElementException('production');
                 var productionPosition = getProductionPosition(production);
                 if (productionPosition === -1) throw new NotExistsElementException('production');
@@ -149,7 +145,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 return _productions.length;
             }
 
-            /****  CATEGORIAS: 
+        /****  CATEGORIAS: 
              *      Iterador de categorías
              *      function getCategoryPosition(category) => posición de category o -1
              *      addCategory => Number con el número de elementos
@@ -172,7 +168,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // function getCategoryPosition(category) => posición de category o -1
             function getCategoryPosition(category) {
-                if (!(category instanceof Category)) throw new NotInstanceOfException(category, 'Category');
+                if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return (element.name === category.name)
                 }
@@ -181,7 +177,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // addCategory => Number con el número de elementos
             this.addCategory = function (category) {
-                if (!(category instanceof Category)) throw new InvalidElementException('category');
+                if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 if (category === null) throw new NullElementException('category');
                 var categoryPosition = getCategoryPosition(category);
                 if (categoryPosition !== -1) throw new NotExistsElementException('category');
@@ -190,7 +186,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // removeCategory => Number con el número de elementos
             this.removeCategory = function (category) {
-                if (!(category instanceof Category)) throw new InvalidElementException('category');
+                if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 if (category === null) throw new NullElementException('category');
                 var categoryPosition = getCategoryPosition(category);
                 if (categoryPosition === -1) throw new NotExistsElementException('caterory');
@@ -221,7 +217,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // function getActorPosition(actor) => posición de user o -1
             function getActorPosition(actor) {
-                if (!(actor instanceof Person)) throw new NotInstanceOfException(actor, 'Person');
+                if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return ((element.name === actor.name) && (element.lastname1 === actor.lastname1)
                         && (element.lastname1 === actor.lastname1));
@@ -231,7 +227,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // addActor => Number con el número de elementos
             this.addActor = function (actor) {
-                if (!(actor instanceof Person)) throw new InvalidElementException('actor');
+                if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
                 if (actor === null) throw new NullElementException('actor');
                 var actorPosition = getActorPosition(actor);
                 if (actorPosition !== -1) throw new NotExistsElementException('actor');
@@ -240,7 +236,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // removeActor => Number con el número de elementos
             this.removeActor = function (actor) {
-                if (!(actor instanceof Person)) throw new InvalidElementException('actor');
+                if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
                 if (actor === null) throw new NullElementException('actor');
                 var actorPosition = getActorPosition(actor);
                 if (actorPosition === -1) throw new NotExistsElementException('actor');
@@ -271,7 +267,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // function getDirectorPosition(director) => posición de director o -1
             function getDirectorPosition(director) {
-                if (!(director instanceof Person)) throw new NotInstanceOfException(director, 'Person');
+                if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
                 function compareElements(element) {
                     return ((element.name === director.name) && (element.lastname1 === director.lastname1)
                         && (element.lastname1 === director.lastname1));
@@ -281,16 +277,16 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
 
             // addDirector => Number con el número de elementos
             this.addDirector = function (director) {
-                if (!(director instanceof Person)) throw new InvalidElementException('director');
+                if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
                 if (director === null) throw new NullElementException('director');
                 var directorPosition = getDirectorPosition(director);
-                if ((directorPosition !== -1)) throw new NotUniqueElementException('director');
+                if ((directorPosition !== -1)) throw new ElementAlreadyExistException('director');
                 return _directors.push(director);
             }
 
             // removeDirector => Number con el número de elementos
             this.removeDirector = function (director) {
-                if (!(director instanceof Person)) throw new InvalidElementException('director');
+                if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
                 if (director === null) throw new NullElementException('director');
                 var directorPosition = getDirectorPosition(director);
                 if (directorPosition === -1) throw new NotExistsElementException('director');
@@ -316,8 +312,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (category === null) throw new NullElementException('category');
                 if (production === null) throw new NullElementException('production');
-                if (!(category instanceof Category)) throw new InvalidElementException('category');
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
                 var categoryPosition = this.getCategoryPosition(category);
                 var productionPosition = this.getProductionPosition(production);
@@ -335,7 +331,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                     i++;
                 }
                 //si lo he encontrado => lanzo excepción
-                if (encontrado) throw new ElementYetAssignedException();
+                if (encontrado) throw new ElementAlreadyExistException('production');
                 //si no => la añado y devuelvo el nuevo número de elementos
                 return _categories[categoryPosition].productions.push(production);
             }
@@ -345,8 +341,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (category === null) throw new NullElementException('category');
                 if (production === null) throw new NullElementException('production');
-                if (!(category instanceof Category)) throw new InvalidElementException('category');
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
                 var categoryPosition = this.getCategoryPosition(category);
                 var productionPosition = this.getProductionPosition(production);
@@ -361,11 +357,12 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 _categories[categoryPosition].productions.splice(proInCatPosition, 1);
                 return _categories[categoryPosition].productions.length;
             }
-//getProductionsCategory iterador de las producciones de una categoría
+        
+            //getProductionsCategory iterador de las producciones de una categoría
             this.getProductionsCategory = function (category) {
                 //compruebo que no son nulos y que son del tipo esperado
                 if (category === null) throw new NullElementException('category');
-                if (!(category instanceof Category)) throw new InvalidElementException('category');
+                if (!(category instanceof Category)) throw new InvalidAccessConstructorException();
                 var categoryPosition = this.getCategoryPosition(category);
                 //si obtengo algún -1 excepción
                 if (categoryPosition === -1) throw new NotExistsElementException('category');
@@ -391,8 +388,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (director === null) throw new NullElementException('director');
                 if (production === null) throw new NullElementException('production');
-                if (!(director instanceof Person)) throw new InvalidElementException('director');
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
                 var directorPosition = this.getDirectorPosition(director);
                 var productionPosition = this.getProductionPosition(production);
@@ -410,7 +407,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                     i++;
                 }
                 //si lo he encontrado => lanzo excepción
-                if (encontrado) throw new ElementYetAssignedException();
+                if (encontrado) throw new ElementAlreadyExistException('production');
                 //si no => la añado y devuelvo el nuevo número de elementos
                 return _directors[directorPosition].productions.push(production);
             }
@@ -420,8 +417,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (director === null) throw new NullElementException('director');
                 if (production === null) throw new NullElementException('production');
-                if (!(director instanceof Person)) throw new InvalidElementException('director');
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(director instanceof Person)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
                 var directorPosition = this.getDirectorPosition(director);
                 var productionPosition = this.getProductionPosition(production);
@@ -436,11 +433,12 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 _directors[directorPosition].productions.splice(proInDirPosition, 1);
                 return _directors[directorPosition].productions.length;
             }
-//getProductionsDirector iterador de las producciones de un director
+
+            //getProductionsDirector iterador de las producciones de un director
             this.getProductionsDirector = function (director) {
                 //compruebo que no son nulos y que son del tipo esperado
                 if (director === null) throw new NullElementException('director');
-                if (!(director instanceof Director)) throw new InvalidElementException('director');
+                if (!(director instanceof Director)) throw new InvalidAccessConstructorException();
                 var directorPosition = this.getDirectorPosition(director);
                 //si obtengo algún -1 excepción
                 if (directorPosition === -1) throw new NotExistsElementException('director');
@@ -454,7 +452,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 }
             }
 
-                     /**
+            /**
              * Métodos de ACTORES
              *      assignActor => Asigna una producción a un actor. Devuelve num de producciones q tiene
              *      deassignActor => Desasigna una producción a una actor. Devuelve el número de producciones que le quedan
@@ -466,8 +464,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (actor === null) throw new NullElementException('actor');
                 if (production === null) throw new NullElementException('production');
-                if (!(actor instanceof Person)) throw new InvalidElementException('actor');
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
                 var actorPosition = this.getActorPosition(actor);
                 var productionPosition = this.getProductionPosition(production);
@@ -485,7 +483,7 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                     i++;
                 }
                 //si lo he encontrado => lanzo excepción
-                if (encontrado) throw new ElementYetAssignedException();
+                if (encontrado) throw new ElementAlreadyExistException('production');
                 //si no => la añado y devuelvo el nuevo número de elementos
                 return _actors[actorPosition].productions.push(production);
             }
@@ -495,8 +493,8 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 //compruebo que no son nulos y que son del tipo esperado
                 if (actor === null) throw new NullElementException('actor');
                 if (production === null) throw new NullElementException('production');
-                if (!(actor instanceof Person)) throw new InvalidElementException('actor');
-                if (!(production instanceof Production)) throw new InvalidElementException('production');
+                if (!(actor instanceof Person)) throw new InvalidAccessConstructorException();
+                if (!(production instanceof Production)) throw new InvalidAccessConstructorException();
                 //busco a ver si es cierto que están en el sistema
                 var actorPosition = this.getActorPosition(actor);
                 var productionPosition = this.getProductionPosition(production);
@@ -511,11 +509,12 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                 _actors[actorPosition].productions.splice(proInActPosition, 1);
                 return _actors[actorPosition].productions.length;
             }
-//getProductionsActor iterador de las producciones de un actor
+
+            //getProductionsActor iterador de las producciones de un actor
             this.getProductionsActor = function (actor) {
                 //compruebo que no son nulos y que son del tipo esperado
                 if (actor === null) throw new NullElementException('actor');
-                if (!(actor instanceof Actor)) throw new InvalidElementException('actor');
+                if (!(actor instanceof Actor)) throw new InvalidAccessConstructorException();
                 var actorPosition = this.getActorPosition(actor);
                 //si obtengo algún -1 excepción
                 if (actorPosition === -1) throw new NotExistsElementException('actor');
@@ -528,13 +527,6 @@ var VStreaming = (function () { //La función anónima devuelve un método getIn
                     }
                 }
             }
-
-
-
-
-
-
-
 
 
         } //Fin constructor VStreaming
