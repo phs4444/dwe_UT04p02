@@ -1,4 +1,6 @@
-##versión 0.2
+## versión 0.5
+  -- VStreaming.js a falta de getCast.js
+## versión 0.2
   -- añadido BaseException.js
 ## versión 0.1
   -- creación de ObjectisVS.js
